@@ -54,7 +54,7 @@ const HeroSection = () => {
           </Link>
           <Link href="/https://www.youtube.com/@sumeetnachane4891">
             <Button size="lg" className="px-8" variant="outline">
-              Get Started
+              Watch Demo
             </Button>
           </Link>
         </div>
