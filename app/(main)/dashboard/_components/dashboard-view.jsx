@@ -1,17 +1,23 @@
 "use client";
 
-import {
-  BrainIcon,
-  Briefcase,
-  BriefcaseIcon,
-  icons,
-  LineChart,
-  TrendingDown,
-  TrendingUp,
-} from "lucide-react";
 import React from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import {
+  BriefcaseIcon,
+  LineChart,
+  TrendingUp,
+  TrendingDown,
+  Brain,
+} from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -19,20 +25,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  Rectangle,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 
 const DashboardView = ({ insights }) => {
+  // Transform salary data for the chart
   const salaryData = insights.salaryRanges.map((range) => ({
     name: range.role,
     min: range.min / 1000,
@@ -67,38 +64,40 @@ const DashboardView = ({ insights }) => {
   };
 
   const OutlookIcon = getMarketOutlookInfo(insights.marketOutlook).icon;
-  const OutlookColor = getMarketOutlookInfo(insights.marketOutlook).color;
+  const outlookColor = getMarketOutlookInfo(insights.marketOutlook).color;
 
+  // Format dates using date-fns
   const lastUpdatedDate = format(new Date(insights.lastUpdated), "dd/MM/yyyy");
-
   const nextUpdateDistance = formatDistanceToNow(
     new Date(insights.nextUpdate),
     { addSuffix: true }
   );
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <Badge variant="outline">last updated: {lastUpdatedDate}</Badge>
+        <Badge variant="outline">Last updated: {lastUpdatedDate}</Badge>
       </div>
 
+      {/* Market Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Market Outlook
             </CardTitle>
-            <OutlookIcon className={`h-4 w-4 ${OutlookColor}`} />
+            <OutlookIcon className={`h-4 w-4 ${outlookColor}`} />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{insights.marketOutlook}</div>
             <p className="text-xs text-muted-foreground">
-              Next Update {nextUpdateDistance}
+              Next update {nextUpdateDistance}
             </p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Industry Growth
             </CardTitle>
@@ -113,7 +112,7 @@ const DashboardView = ({ insights }) => {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Demand Level</CardTitle>
             <BriefcaseIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -128,9 +127,9 @@ const DashboardView = ({ insights }) => {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Top Skills</CardTitle>
-            <BrainIcon className="h-4 w-4 text-muted-foreground" />
+            <Brain className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-1">
@@ -143,7 +142,9 @@ const DashboardView = ({ insights }) => {
           </CardContent>
         </Card>
       </div>
-      <Card>
+
+      {/* Salary Ranges Chart */}
+      <Card className="col-span-4">
         <CardHeader>
           <CardTitle>Salary Ranges by Role</CardTitle>
           <CardDescription>
@@ -171,7 +172,6 @@ const DashboardView = ({ insights }) => {
                         </div>
                       );
                     }
-
                     return null;
                   }}
                 />
@@ -184,6 +184,7 @@ const DashboardView = ({ insights }) => {
         </CardContent>
       </Card>
 
+      {/* Industry Trends */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader>
